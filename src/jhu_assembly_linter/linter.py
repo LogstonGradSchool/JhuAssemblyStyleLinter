@@ -37,16 +37,6 @@ class Linter:
     def _check_preamble(self):
         """
         Ensure the preamble is present and well formatted.
-
-        # Program Name: helloWorld.s
-        # Author: John Doe
-        # Date: 11/11/2020
-        # Purpose: To print out a hello world message using a
-        #          system call (svc) from ARM assembly
-        # Functions: (when applicable)
-        # Inputs: (when applicable)
-        # Outputs: (when applicable)
-
         """
         preamble = []
         for line in self._lines:
