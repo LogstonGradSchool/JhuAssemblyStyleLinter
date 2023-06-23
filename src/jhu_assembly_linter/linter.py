@@ -5,13 +5,15 @@ import string
 class Finding:
     def __init__(
         self,
-        line_nubmer: int,
         message: str,
-        columns: tuple,
+        line_number: int = 0,
+        columns: tuple = (),
+        source: str = '',
     ) -> None:
-        self.line_nubmer = line_nubmer
         self.message = message
+        self.line_number = line_number
         self.columns = columns
+        self.source = source
 
 
 class Linter:
@@ -56,16 +58,12 @@ class Linter:
         invalidChars = set(name) - set(string.ascii_letters)
         if invalidChars:
             self._findings.append(Finding(
-                0,
                 f'File name contains invalid characters: {invalidChars}',
-                (0,),
             ))
 
         if name[0] not in string.ascii_lowercase:
             self._findings.append(Finding(
-                0,
                 f'File starts with non-lowercase letter.',
-                (0,),
             ))
 
     def _check_file_name_main(self):
@@ -82,17 +80,15 @@ class Linter:
             if line.strip().startswith('main:'):
                 if not self.file.endswith('Main.s'):
                     self._findings.append(Finding(
-                        i,
                         'File name does not contain "Main" when it should.',
+                        i,
                         (0,),
                     ))
                 break
         else:
             if self.file.endswith('Main.s'):
                 self._findings.append(Finding(
-                    len(self._lines),
                     'File name contains "Main" but no main function found.',
-                    (0,),
                 ))
 
 
@@ -111,8 +107,8 @@ class Linter:
 
             if not line.strip().split()[0].isupper():
                 self._findings.append(Finding(
-                    i,
                     'Instruction is not uppercase.',
+                    i,
                     (len(line) - len(line.lstrip()),),
                 ))
 
@@ -131,8 +127,8 @@ class Linter:
                 m = re.search(r'[ ,]R\d{1,16}([ ,])?', chunk)
                 if m:
                     self._findings.append(Finding(
-                        i,
                         'Register is not lowercase.',
+                        i,
                         (pos + m.start(),),
                     ))
                     pos += m.end() - 1
@@ -145,8 +141,8 @@ class Linter:
         for i, line in enumerate(self._lines, start=1):
             if len(line) > 0 and len(line.strip()) == 0:
                 self._findings.append(Finding(
-                    i,
                     'Non-functional whitespace found.',
+                    i,
                     (0, len(line)),
                 ))
 
@@ -157,8 +153,8 @@ class Linter:
         for i, line in enumerate(self._lines, start=1):
             try:
                 self._findings.append(Finding(
-                    i,
                     'Tab found. Only spaces allowed.',
+                    i,
                     (line.index('\t'),),
                 ))
             except ValueError:

@@ -25,7 +25,7 @@ def test_check_preamble():
     ]
     linter._check_preamble()
     assert len(linter.findings) == 1
-    assert linter.findings[0].line_nubmer == 2
+    assert linter.findings[0].line_number == 2
 
     # Something before preamble.
     linter = Linter("helloWorld.s")
@@ -41,7 +41,7 @@ def test_check_preamble():
     ]
     linter._check_preamble()
     assert len(linter.findings) == 1
-    assert linter.findings[0].line_nubmer == 2
+    assert linter.findings[0].line_number == 2
 
     # Preamble missing Program.
     linter = Linter("helloWorld.s")
@@ -56,7 +56,7 @@ def test_check_preamble():
     ]
     linter._check_preamble()
     assert len(linter.findings) == 1
-    assert linter.findings[0].line_nubmer == 6
+    assert linter.findings[0].line_number == 6
 
     # Preamble Program incorrect.
     linter = Linter("helloWorld.s")
@@ -72,7 +72,7 @@ def test_check_preamble():
     ]
     linter._check_preamble()
     assert len(linter.findings) == 1
-    assert linter.findings[0].line_nubmer == 1
+    assert linter.findings[0].line_number == 1
 
     # Preamble missing Author.
     linter = Linter("helloWorld.s")
@@ -87,7 +87,7 @@ def test_check_preamble():
     ]
     linter._check_preamble()
     assert len(linter.findings) == 1
-    assert linter.findings[0].line_nubmer == 6
+    assert linter.findings[0].line_number == 6
 
     # Preamble missing Date.
     linter = Linter("helloWorld.s")
@@ -102,7 +102,7 @@ def test_check_preamble():
     ]
     linter._check_preamble()
     assert len(linter.findings) == 1
-    assert linter.findings[0].line_nubmer == 6
+    assert linter.findings[0].line_number == 6
 
     # Preamble missing Purpose.
     linter = Linter("helloWorld.s")
@@ -116,7 +116,7 @@ def test_check_preamble():
     ]
     linter._check_preamble()
     assert len(linter.findings) == 1
-    assert linter.findings[0].line_nubmer == 5
+    assert linter.findings[0].line_number == 5
 
     # Preamble missing Functions.
     linter = Linter("helloWorld.s")
@@ -131,7 +131,7 @@ def test_check_preamble():
     ]
     linter._check_preamble()
     assert len(linter.findings) == 1
-    assert linter.findings[0].line_nubmer == 6
+    assert linter.findings[0].line_number == 6
 
     # Preamble Functions incorrect.
     linter = Linter("helloWorld.s")
@@ -147,7 +147,7 @@ def test_check_preamble():
     ]
     linter._check_preamble()
     assert len(linter.findings) == 1
-    assert linter.findings[0].line_nubmer == 6
+    assert linter.findings[0].line_number == 6
 
 
 def test_check_file_name():
@@ -196,7 +196,7 @@ def test_check_file_name_main():
     ]
     linter._check_file_name_main()
     assert len(linter.findings) == 1
-    assert linter.findings[0].line_nubmer == 3
+    assert linter.findings[0].line_number == 3
 
     linter = Linter("doesEndInMain.s")
     linter._Linter__lines = [
@@ -217,7 +217,7 @@ def test_check_file_name_main():
     ]
     linter._check_file_name_main()
     assert len(linter.findings) == 1
-    assert linter.findings[0].line_nubmer == 4
+    assert linter.findings[0].line_number == 4
 
     linter = Linter("doesNotMatter.s")
     linter._Linter__lines = [
@@ -285,7 +285,7 @@ def test_check_data_section_follows_text_section():
     ]
     linter._check_data_section_follows_text_section()
     assert len(linter.findings) == 1
-    assert linter.findings[0].line_nubmer == 2
+    assert linter.findings[0].line_number == 2
 
     # Data section before text section.
     linter = Linter("")
@@ -297,8 +297,8 @@ def test_check_data_section_follows_text_section():
     ]
     linter._check_data_section_follows_text_section()
     assert len(linter.findings) == 2
-    assert linter.findings[0].line_nubmer == 2
-    assert linter.findings[1].line_nubmer == 4
+    assert linter.findings[0].line_number == 2
+    assert linter.findings[1].line_number == 4
 
 
 def test_check_instructions_uppercase():
@@ -310,8 +310,8 @@ def test_check_instructions_uppercase():
     ]
     linter._check_instructions_uppercase()
     assert len(linter.findings) == 2
-    assert linter.findings[0].line_nubmer == 2
-    assert linter.findings[1].line_nubmer == 3
+    assert linter.findings[0].line_number == 2
+    assert linter.findings[1].line_number == 3
 
 
 def test_check_registers_lowercase():
@@ -323,9 +323,9 @@ def test_check_registers_lowercase():
     ]
     linter._check_registers_lowercase()
     assert len(linter.findings) == 3
-    assert linter.findings[0].line_nubmer == 2
-    assert linter.findings[1].line_nubmer == 3
-    assert linter.findings[2].line_nubmer == 3
+    assert linter.findings[0].line_number == 2
+    assert linter.findings[1].line_number == 3
+    assert linter.findings[2].line_number == 3
 
 
 def test_check_line_empty_with_nonzero_space():
@@ -337,8 +337,8 @@ def test_check_line_empty_with_nonzero_space():
     ]
     linter._check_line_empty_with_nonzero_space()
     assert len(linter.findings) == 2
-    assert linter.findings[0].line_nubmer == 1
-    assert linter.findings[1].line_nubmer == 2
+    assert linter.findings[0].line_number == 1
+    assert linter.findings[1].line_number == 2
 
 
 def test_check_spaces():
@@ -350,8 +350,8 @@ def test_check_spaces():
     ]
     linter._check_spaces()
     assert len(linter.findings) == 2
-    assert linter.findings[0].line_nubmer == 2
-    assert linter.findings[1].line_nubmer == 3
+    assert linter.findings[0].line_number == 2
+    assert linter.findings[1].line_number == 3
 
 
 def test_check_is_comment_line():
