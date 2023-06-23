@@ -50,20 +50,6 @@ class Linter:
     def _check_file_name(self):
         """
         Check the file name follows the correct conventions.
-
-        # Good Examples
-        helloWorld.s
-        toBeOrNotToBe.s
-        multiplyNumbers.s
-        addNumbers.s
-        # Bad Example 1 - Starts with uppercase
-        HelloWorld.s
-        # Bad Example 2 - Starts with numerical value
-        2beOrNot2Be.s
-        # Bad Example 3 - Snake case and all caps
-        MULTIPLY_NUMBERS.s
-        # Bad Example 4 - hyphenated and all lowercase
-        add-numbers.s
         """
         name = self.file[:-2]
 
@@ -85,11 +71,6 @@ class Linter:
     def _check_file_name_main(self):
         """
         Check that if file has "main" function, it has "Main" in its name.
-
-        # Good Example
-        calculateHeightMain.s
-        # Bad Example 3 - not clear where main lives
-        calculateHeight.s
         """
         for i, line in enumerate(self._lines, start=1):
             if self._check_is_comment_line(line):
@@ -123,13 +104,6 @@ class Linter:
     def _check_instructions_uppercase(self):
         """
         Check that instructions are uppercase.
-
-        .text
-        .global main
-        main:
-            # Prompts user for an input
-            LDR r0, =userPrompt
-            BL printf
         """
         for i, line in enumerate(self._lines, start=1):
             if not self._check_is_instruction_line(line):
@@ -145,13 +119,6 @@ class Linter:
     def _check_registers_lowercase(self):
         """
         Check registers are listed in lowercase.
-
-        .text
-        .global main
-        main:
-            # Prompts user for an input
-            LDR r0, =userPrompt
-            BL printf
         """
         for i, line in enumerate(self._lines, start=1):
             if not self._check_is_instruction_line(line):
@@ -174,13 +141,6 @@ class Linter:
     def _check_line_empty_with_nonzero_space(self):
         """
         Check check that empty lines have no trailing whitespace.
-
-        .text
-        .global main
-        main:
-            # Prompts user for an input
-            LDR r0, =userPrompt
-            BL printf
         """
         for i, line in enumerate(self._lines, start=1):
             if len(line) > 0 and len(line.strip()) == 0:
