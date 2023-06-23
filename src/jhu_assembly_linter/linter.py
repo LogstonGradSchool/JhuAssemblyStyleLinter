@@ -14,13 +14,17 @@ class Finding:
 
 
 class Linter:
+    # Oh, type checking...
+    SENTIAL_EMPTY_LINES = []
+
     def __init__(self, file: str) -> None:
         self.file: str = file
         self._findings: list[Finding] = []
+        self.__lines: list[str] = self.SENTIAL_EMPTY_LINES
 
     @property
     def _lines(self):
-        if getattr(self, '__lines', None) is None:
+        if self.__lines is self.SENTIAL_EMPTY_LINES:
             with open(self.file) as fp:
                 self.__lines = fp.readlines()
         return self.__lines
@@ -175,15 +179,14 @@ class Linter:
         Check each non-comment line to check that it does not have tabs.
         """
         for i, line in enumerate(self._lines, start=1):
-            if not self._check_is_comment_line(line):
-                try:
-                    self._findings.append(Finding(
-                        i,
-                        'Tab found. Only spaces allowed.',
-                        (line.index('\t'),),
-                    ))
-                except ValueError:
-                    pass
+            try:
+                self._findings.append(Finding(
+                    i,
+                    'Tab found. Only spaces allowed.',
+                    (line.index('\t'),),
+                ))
+            except ValueError:
+                pass
 
     def _check_is_comment_line(self, line: str):
         return bool(re.match(r'^\s*#', line))
