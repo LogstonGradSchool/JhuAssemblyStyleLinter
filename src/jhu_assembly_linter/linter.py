@@ -1,4 +1,5 @@
 import re
+import string
 
 
 class Finding:
@@ -74,6 +75,22 @@ class Linter:
         # Bad Example 4 - hyphenated and all lowercase
         add-numbers.s
         """
+        name = self.file[:-2]
+
+        invalidChars = set(name) - set(string.ascii_letters)
+        if invalidChars:
+            self._findings.append(Finding(
+                0,
+                f'File name contains invalid characters: {invalidChars}',
+                (0,),
+            ))
+
+        if name[0] not in string.ascii_lowercase:
+            self._findings.append(Finding(
+                0,
+                f'File starts with non-lowercase letter.',
+                (0,),
+            ))
 
     def _check_file_name_main(self):
         """
@@ -91,13 +108,22 @@ class Linter:
             if self._check_is_instruction_line(line):
                 continue
 
-            if line.strip().startswith('main:') and not self.file.endswith('Main.s'):
+            if line.strip().startswith('main:'):
+                if not self.file.endswith('Main.s'):
+                    self._findings.append(Finding(
+                        i,
+                        'File name does not contain "Main" when it should.',
+                        (0,),
+                    ))
+                break
+        else:
+            if self.file.endswith('Main.s'):
                 self._findings.append(Finding(
-                    i,
-                    'File name does not contain "Main" when it should.',
+                    len(self._lines),
+                    'File name contains "Main" but no main function found.',
                     (0,),
                 ))
-                break
+
 
     def _check_data_section_follows_text_section(self):
         """
@@ -145,14 +171,14 @@ class Linter:
             m = True  # To get things started.
             pos = 0
             while m:
-                m = re.match(r'[ ,]R\d{1,16}[ ,]', chunk)
+                m = re.search(r'[ ,]R\d{1,16}([ ,])?', chunk)
                 if m:
                     self._findings.append(Finding(
                         i,
                         'Register is not lowercase.',
                         (pos + m.start(),),
                     ))
-                    pos += m.start()
+                    pos += m.end() - 1
                     chunk = line[pos:]
 
     def _check_line_empty_with_nonzero_space(self):
