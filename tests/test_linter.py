@@ -217,7 +217,7 @@ def test_check_file_name_main():
     ]
     linter._check_file_name_main()
     assert len(linter.findings) == 1
-    assert linter.findings[0].line_number == 4
+    assert linter.findings[0].line_number == 0
 
     linter = Linter("doesNotMatter.s")
     linter._Linter__lines = [

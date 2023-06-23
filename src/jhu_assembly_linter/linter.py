@@ -81,8 +81,8 @@ class Linter:
                 if not self.file.endswith('Main.s'):
                     self._findings.append(Finding(
                         'File name does not contain "Main" when it should.',
-                        i,
-                        (0,),
+                        line_number=i,
+                        source=line,
                     ))
                 break
         else:
@@ -108,8 +108,9 @@ class Linter:
             if not line.strip().split()[0].isupper():
                 self._findings.append(Finding(
                     'Instruction is not uppercase.',
-                    i,
-                    (len(line) - len(line.lstrip()),),
+                    line_number=i,
+                    columns=(len(line) - len(line.lstrip()),),
+                    source=line,
                 ))
 
     def _check_registers_lowercase(self):
@@ -128,8 +129,9 @@ class Linter:
                 if m:
                     self._findings.append(Finding(
                         'Register is not lowercase.',
-                        i,
-                        (pos + m.start(),),
+                        line_number=i,
+                        columns=(pos + m.start(),),
+                        source=line,
                     ))
                     pos += m.end() - 1
                     chunk = line[pos:]
@@ -142,8 +144,9 @@ class Linter:
             if len(line) > 0 and len(line.strip()) == 0:
                 self._findings.append(Finding(
                     'Non-functional whitespace found.',
-                    i,
-                    (0, len(line)),
+                    line_number=i,
+                    columns=(0, len(line)),
+                    source=line,
                 ))
 
     def _check_spaces(self):
@@ -154,8 +157,9 @@ class Linter:
             try:
                 self._findings.append(Finding(
                     'Tab found. Only spaces allowed.',
-                    i,
-                    (line.index('\t'),),
+                    line_number=i,
+                    columns=(line.index('\t'),),
+                    source=line,
                 ))
             except ValueError:
                 pass
