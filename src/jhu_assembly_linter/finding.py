@@ -1,6 +1,4 @@
 
-
-
 class Finding:
     def __init__(
         self,
@@ -37,3 +35,5 @@ class Finding:
                 lines.append(carrot_line)
 
         return '\n'.join(lines)
+
+    __repr__ = __str__

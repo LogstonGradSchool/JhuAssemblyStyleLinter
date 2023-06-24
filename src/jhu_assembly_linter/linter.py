@@ -35,62 +35,56 @@ class Linter:
         Ensure the preamble is present and well formatted.
         """
         preamble = []
-        for line in self._lines:
+        for i, line in enumerate(self._lines):
             if not self._check_is_comment_line(line):
                 break
 
-            preamble.append(line.strip().lstrip('#').lstrip())
+            preamble.append((i, line.strip().lstrip('#').lstrip()))
 
-        line_by_key: dict[str, str] = {}
-        for line in preamble:
-            key = line.split()[0]
-            line_by_key[key.lower()] = line
+        line_by_key: dict[str, tuple] = {}
+        for i, line in preamble:
+            key = line.split()[0].rstrip(':').strip().lower()
+            line_by_key[key] = (i, line)
 
-        # Program Name: helloWorld.s',
-        # Author: John Doe',
-        # Date: 11/11/2020',
-        # Purpose: To print out a hello world message using a',
-        #          system call (svc) from ARM assembly',
-        # Functions: sub add',
-        program_line = line_by_key.get('program')
+        program_line = line_by_key.get('program') or ()
         if not program_line:
-            pass
+            self._findings.append(Finding(
+                f'No "Program Name" line found.',
+            ))
+        else:
+            self._check_preamble_program_line(*program_line)
 
         author_line = line_by_key.get('author')
         if not author_line:
-            pass
+            self._findings.append(Finding(
+                f'No "Author" line found.',
+            ))
+        else:
+            self._check_preamble_author_line(*author_line)
 
         date_line = line_by_key.get('date')
         if not date_line:
-            pass
+            self._findings.append(Finding(
+                f'No "Date" line found.',
+            ))
+        else:
+            self._check_preamble_date_line(*date_line)
 
         purpose_line = line_by_key.get('purpose')
         if not purpose_line:
-            pass
+            self._findings.append(Finding(
+                f'No "Purpose" line found.',
+            ))
+        else:
+            self._check_preamble_purpose_line(*purpose_line)
 
-        functions_line = line_by_key.get('functions') or ''
+        functions_line = line_by_key.get('functions')
         if not functions_line:
-            pass
-
-        # Get functions from function line.
-        line_functions = set(functions_line.split()[1:])
-
-        # Get functions from file.
-        file_functions = set()
-        for line in self._lines:
-            if self._check_is_function_line(line):
-                file_functions.add(line.strip().rstrip(':'))
-
-        if line_functions - file_functions:
-            # function in line but not in file
-            pass
-
-        if  file_functions - line_functions:
-            # function in file but not in line
-            pass
-
-        if len(preamble) < 3:
-            pass
+            self._findings.append(Finding(
+                f'No "Functions" line found.',
+            ))
+        else:
+            self._check_preamble_functions_line(*functions_line)
 
     def _check_file_name(self):
         """
@@ -250,6 +244,81 @@ class Linter:
             return False
 
         return True
+
+    def _check_preamble_program_line(self, line_number, line):
+        parts = line.split(':')
+        if parts != 2:
+            self._findings.append(Finding(
+                f'Invalid "Program Name" line found.',
+                line_number=line_number,
+                source=line,
+            ))
+
+        if parts[0] != 'Program Name':
+            self._findings.append(Finding(
+                f'Invalid "Program Name" line found.',
+                line_number=line_number,
+                source=line,
+                columns=(0, len(parts[0])),
+            ))
+
+        if parts[1].strip() != self.file:
+            self._findings.append(Finding(
+                f'File in "Program Name" is not equivalent to file name.',
+                line_number=line_number,
+                source=line,
+                columns=(line.index(':') + 1, len(line)),
+            ))
+
+    # Author: John Doe',
+    # Date: 11/11/2020',
+    # Purpose: To print out a hello world message using a',
+    #          system call (svc) from ARM assembly',
+    # Functions: sub add',
+    def _check_preamble_author_line(self, line_number, line):
+        pass
+
+    def _check_preamble_date_line(self, line_number, line):
+        pass
+
+    def _check_preamble_purpose_line(self, line_number, line):
+        pass
+
+    def _check_preamble_functions_line(self, line_number, line):
+        # Get functions from function line.
+        line_functions = set(line.split()[1:])
+
+        # Get functions from file.
+        file_functions = set()
+        for line in self._lines:
+            if self._check_is_function_line(line):
+                print(line)
+                file_functions.add(line.strip().rstrip(':'))
+
+        print(line_functions)
+
+        # function in line but not in file
+        missing_functions = line_functions - file_functions
+        if missing_functions:
+            for missing_function in missing_functions:
+                i = line.index(missing_function)
+                self._findings.append(Finding(
+                    f'Function {missing_function} listed in Functions line but not in file.',
+                    line_number=line_number,
+                    source=line,
+                    columns=(i, i + len(missing_function)),
+                ))
+
+        # function in line but not in file
+        missing_functions = file_functions - line_functions
+        if missing_functions:
+            for missing_function in missing_functions:
+                i = line.index(missing_function)
+                self._findings.append(Finding(
+                    f'Function {missing_function} in file but not listed in Functions line.',
+                    line_number=line_number,
+                    source=line,
+                ))
 
     @property
     def findings(self) -> list[Finding]:
