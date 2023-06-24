@@ -84,6 +84,23 @@ class Linter:
         """
         Check that all data sections follow text sections.
         """
+        # TODO: Make this loop reset on new functions.
+        can_see_data = False
+        for i, line in enumerate(self._lines, start=1):
+            if line.strip().startswith('.text'):
+                can_see_data = True
+                continue
+
+            if line.strip().startswith('.data'):
+                if can_see_data:
+                    can_see_data = False
+                    continue
+                else:
+                    self._findings.append(Finding(
+                        'Data sections must follow a text section.',
+                        line_number=i,
+                        source=line,
+                    ))
 
     def _check_instructions_uppercase(self):
         """

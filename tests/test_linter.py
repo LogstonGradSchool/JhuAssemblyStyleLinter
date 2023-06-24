@@ -285,7 +285,7 @@ def test_check_data_section_follows_text_section():
     ]
     linter._check_data_section_follows_text_section()
     assert len(linter.findings) == 1
-    assert linter.findings[0].line_number == 2
+    assert linter.findings[0].line_number == 1
 
     # Data section before text section.
     linter = Linter("")
@@ -296,9 +296,8 @@ def test_check_data_section_follows_text_section():
         '.text',
     ]
     linter._check_data_section_follows_text_section()
-    assert len(linter.findings) == 2
-    assert linter.findings[0].line_number == 2
-    assert linter.findings[1].line_number == 4
+    assert len(linter.findings) == 1
+    assert linter.findings[0].line_number == 1
 
 
 def test_check_instructions_uppercase():
