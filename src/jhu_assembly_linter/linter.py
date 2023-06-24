@@ -1,19 +1,7 @@
 import re
 import string
 
-
-class Finding:
-    def __init__(
-        self,
-        message: str,
-        line_number: int = 0,
-        columns: tuple = (),
-        source: str = '',
-    ) -> None:
-        self.message = message
-        self.line_number = line_number
-        self.columns = columns
-        self.source = source
+from .finding import Finding
 
 
 class Linter:

@@ -1,3 +1,5 @@
+import pytest
+
 from jhu_assembly_linter.linter import Finding
 
 
@@ -56,10 +58,25 @@ def test_finding_column_no_line_number():
 def test_finding_column_no_source():
     finding = Finding(
         message='Error found.',
-        line_number=1,
-        columns=(0,),
     )
     # Only show message if no source.
     assert str(finding) == '\n'.join((
         'Error found.',
     ))
+
+
+def test_finding_columns_with_no_source():
+    with pytest.raises(ValueError):
+        Finding(
+            message='Error found.',
+            line_number=1,
+        )
+
+
+def test_finding_line_with_no_source():
+    with pytest.raises(ValueError):
+        Finding(
+            message='Error found.',
+            line_number=1,
+            columns=(0,),
+        )
