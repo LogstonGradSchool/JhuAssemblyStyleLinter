@@ -370,3 +370,13 @@ def test_check_is_instruction_line():
     assert not linter._check_is_instruction_line('.text')
     assert not linter._check_is_instruction_line('main:')
     assert not linter._check_is_instruction_line('')
+
+
+def test_check_is_function_line():
+    linter = Linter("")
+    assert not linter._check_is_function_line('# this is a comment line')
+    assert not linter._check_is_function_line('   # this is a poorly indented comment line')
+    assert not linter._check_is_function_line('MOV r0, r0')
+    assert not linter._check_is_function_line('.global func')
+    assert linter._check_is_function_line('main:')
+    assert not linter._check_is_function_line(' func: ')

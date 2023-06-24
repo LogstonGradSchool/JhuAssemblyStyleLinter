@@ -22,6 +22,12 @@ class Linter:
 
     def lint(self):
         self._check_preamble()
+        self._check_file_name()
+        self._check_file_name_main()
+        self._check_data_section_follows_text_section()
+        self._check_instructions_uppercase()
+        self._check_registers_lowercase()
+        self._check_line_empty_with_nonzero_space()
         self._check_spaces()
 
     def _check_preamble(self):
@@ -32,7 +38,56 @@ class Linter:
         for line in self._lines:
             if not self._check_is_comment_line(line):
                 break
-            preamble.append(line)
+
+            preamble.append(line.strip().lstrip('#').lstrip())
+
+        line_by_key: dict[str, str] = {}
+        for line in preamble:
+            key = line.split()[0]
+            line_by_key[key.lower()] = line
+
+        # Program Name: helloWorld.s',
+        # Author: John Doe',
+        # Date: 11/11/2020',
+        # Purpose: To print out a hello world message using a',
+        #          system call (svc) from ARM assembly',
+        # Functions: sub add',
+        program_line = line_by_key.get('program')
+        if not program_line:
+            pass
+
+        author_line = line_by_key.get('author')
+        if not author_line:
+            pass
+
+        date_line = line_by_key.get('date')
+        if not date_line:
+            pass
+
+        purpose_line = line_by_key.get('purpose')
+        if not purpose_line:
+            pass
+
+        functions_line = line_by_key.get('functions') or ''
+        if not functions_line:
+            pass
+
+        # Get functions from function line.
+        line_functions = set(functions_line.split()[1:])
+
+        # Get functions from file.
+        file_functions = set()
+        for line in self._lines:
+            if self._check_is_function_line(line):
+                file_functions.add(line.strip().rstrip(':'))
+
+        if line_functions - file_functions:
+            # function in line but not in file
+            pass
+
+        if  file_functions - line_functions:
+            # function in file but not in line
+            pass
 
         if len(preamble) < 3:
             pass
@@ -78,7 +133,6 @@ class Linter:
                 self._findings.append(Finding(
                     'File name contains "Main" but no main function found.',
                 ))
-
 
     def _check_data_section_follows_text_section(self):
         """
@@ -171,6 +225,9 @@ class Linter:
 
     def _check_is_comment_line(self, line: str):
         return bool(re.match(r'^\s*#', line))
+
+    def _check_is_function_line(self, line: str):
+        return bool(re.match(r'^[a-zA-Z0-9]+:\s*$', line))
 
     def _check_is_instruction_line(self, line: str) -> bool:
         """
