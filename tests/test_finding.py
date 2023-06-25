@@ -11,7 +11,7 @@ def test_finding_column_range():
         source='The error is here...',
     )
     assert str(finding) == '\n'.join((
-        'Error found.',
+        'E:: Error found.',
         '14: The error is here...',
         '        ^^^^^',
     ))
@@ -25,7 +25,7 @@ def test_finding_column_zero():
         source='The error is here...',
     )
     assert str(finding) == '\n'.join((
-        'Error found.',
+        'E:: Error found.',
         '14: The error is here...',
         '    ^',
     ))
@@ -38,7 +38,7 @@ def test_finding_column_no_columns():
         source='The error is here...',
     )
     assert str(finding) == '\n'.join((
-        'Error found.',
+        'E:: Error found.',
         '14: The error is here...',
     ))
 
@@ -51,7 +51,7 @@ def test_finding_column_no_line_number():
     )
     # Don't show source if line_number is 0.
     assert str(finding) == '\n'.join((
-        'Error found.',
+        'E:: Error found.',
     ))
 
 
@@ -61,7 +61,7 @@ def test_finding_column_no_source():
     )
     # Only show message if no source.
     assert str(finding) == '\n'.join((
-        'Error found.',
+        'E:: Error found.',
     ))
 
 

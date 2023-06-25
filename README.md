@@ -35,12 +35,11 @@ To lint a whole directory:
 find . -name "*.s" | xargs -I{} jhu-assembly-linter  {}
 ```
 
-SOON TO BE IMPLEMENTED:
-To add a pre-commit hook:
+To add a pre-commit hook to you repo:
 ```
 repos:
 -   repo: https://github.com/LogstonGradSchool/JhuAssemblyStyleLinter
-    rev: v0.1.0
+    rev: <latest version>
     hooks:
     -   id: jhu-assembly-linter
 ```
