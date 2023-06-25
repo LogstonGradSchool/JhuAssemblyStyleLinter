@@ -1,0 +1,7 @@
+- id: jhu-assembly-linter
+  name: JHU Assembly Linter
+  description: Lint assembly according to JHU EN.605.204 standards.
+  entry: jhu-assembly-linter
+  language: python
+  types: [assembly]
+  stages: [commit, push, manual]

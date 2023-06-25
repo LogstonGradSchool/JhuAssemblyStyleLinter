@@ -1,10 +1,9 @@
 # Assembly Style Linter
 
-- For: Computer Organization - 605.204
-- Instructor: Charles Kann
-
-## Analysis
-
+This linter was designed with Prof. Charles Kann's Computer Organization
+(EN.605.204) course in mind. It performs a strict but non-exhaustive lint;
+meaning it will not catch all errors but will be noisy and exacting about those
+that it does.
 
 ## Install
 
@@ -13,10 +12,6 @@ pip install jhu-assembly-linter
 ```
 
 ## Usage
-
-Pip install from the [releases
-page](https://github.com/LogstonGradSchool/JhuAssemblyStyleLinter/releases).
-Then ...
 
 ```
 $ jhu-assembly-linter ./path/to/file.s
@@ -34,10 +29,20 @@ E:: File name does not end with "Main" when it should.
 21: main:
 ```
 
-For a whole directory:
+To lint a whole directory:
 
 ```
 find . -name "*.s" | xargs -I{} jhu-assembly-linter  {}
+```
+
+SOON TO BE IMPLEMENTED:
+To add a pre-commit hook:
+```
+repos:
+-   repo: https://github.com/LogstonGradSchool/JhuAssemblyStyleLinter
+    rev: v0.1.0
+    hooks:
+    -   id: jhu-assembly-linter
 ```
 
 ### Tests
