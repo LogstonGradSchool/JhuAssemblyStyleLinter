@@ -32,12 +32,14 @@ def multi(argv=None) -> int:
 
     return_code = 0
     for filename in args.files:
-        print(f'--- {filename}')
         linter = Linter(filename)
         linter.lint()
-        for f in linter.findings:
-            print(f)
+
         if linter.findings:
+            print(f'--- {filename}')
+            for f in linter.findings:
+                print(f)
+
             return_code = 1
 
     return return_code
