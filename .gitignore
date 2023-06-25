@@ -36,3 +36,5 @@ target/surefire-reports
 *.pdf
 coverage.xml
 .coverage
+
+dist/
