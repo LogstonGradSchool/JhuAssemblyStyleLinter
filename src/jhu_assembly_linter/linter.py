@@ -35,7 +35,7 @@ class Linter:
         Ensure the preamble is present and well formatted.
         """
         preamble = []
-        for i, line in enumerate(self._lines):
+        for i, line in enumerate(self._lines, start=1):
             if not self._check_is_comment_line(line):
                 break
 
@@ -246,8 +246,8 @@ class Linter:
         return True
 
     def _check_preamble_program_line(self, line_number, line):
-        parts = line.split(':')
-        if parts != 2:
+        parts = list(map(str.strip, line.split(':')))
+        if len(parts) != 2:
             self._findings.append(Finding(
                 f'Invalid "Program Name" line found.',
                 line_number=line_number,
@@ -262,7 +262,7 @@ class Linter:
                 columns=(0, len(parts[0])),
             ))
 
-        if parts[1].strip() != self.file:
+        if parts[1] != self.file:
             self._findings.append(Finding(
                 f'File in "Program Name" is not equivalent to file name.',
                 line_number=line_number,
@@ -270,18 +270,16 @@ class Linter:
                 columns=(line.index(':') + 1, len(line)),
             ))
 
-    # Author: John Doe',
-    # Date: 11/11/2020',
-    # Purpose: To print out a hello world message using a',
-    #          system call (svc) from ARM assembly',
-    # Functions: sub add',
     def _check_preamble_author_line(self, line_number, line):
+        # TODO: Implement a more sophisticated check.
         pass
 
     def _check_preamble_date_line(self, line_number, line):
+        # TODO: Implement a more sophisticated check.
         pass
 
     def _check_preamble_purpose_line(self, line_number, line):
+        # TODO: Implement a more sophisticated check.
         pass
 
     def _check_preamble_functions_line(self, line_number, line):
@@ -290,12 +288,9 @@ class Linter:
 
         # Get functions from file.
         file_functions = set()
-        for line in self._lines:
-            if self._check_is_function_line(line):
-                print(line)
-                file_functions.add(line.strip().rstrip(':'))
-
-        print(line_functions)
+        for tmp_line in self._lines:
+            if self._check_is_function_line(tmp_line):
+                file_functions.add(tmp_line.strip().rstrip(':'))
 
         # function in line but not in file
         missing_functions = line_functions - file_functions
@@ -313,7 +308,6 @@ class Linter:
         missing_functions = file_functions - line_functions
         if missing_functions:
             for missing_function in missing_functions:
-                i = line.index(missing_function)
                 self._findings.append(Finding(
                     f'Function {missing_function} in file but not listed in Functions line.',
                     line_number=line_number,

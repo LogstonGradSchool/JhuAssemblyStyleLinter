@@ -24,8 +24,8 @@ def test_check_preamble():
         'sub:',
     ]
     linter._check_preamble()
-    assert len(linter.findings) == 1
-    assert linter.findings[0].line_number == 2
+    assert len(linter.findings) == 5
+    assert linter.findings[0].line_number == 0
 
     # Something before preamble.
     linter = Linter("helloWorld.s")
@@ -40,8 +40,8 @@ def test_check_preamble():
         'sub:',
     ]
     linter._check_preamble()
-    assert len(linter.findings) == 1
-    assert linter.findings[0].line_number == 2
+    assert len(linter.findings) == 5
+    assert linter.findings[0].line_number == 0
 
     # Preamble missing Program.
     linter = Linter("helloWorld.s")
@@ -56,7 +56,7 @@ def test_check_preamble():
     ]
     linter._check_preamble()
     assert len(linter.findings) == 1
-    assert linter.findings[0].line_number == 6
+    assert linter.findings[0].line_number == 0
 
     # Preamble Program incorrect.
     linter = Linter("helloWorld.s")
@@ -87,7 +87,7 @@ def test_check_preamble():
     ]
     linter._check_preamble()
     assert len(linter.findings) == 1
-    assert linter.findings[0].line_number == 6
+    assert linter.findings[0].line_number == 0
 
     # Preamble missing Date.
     linter = Linter("helloWorld.s")
@@ -102,7 +102,7 @@ def test_check_preamble():
     ]
     linter._check_preamble()
     assert len(linter.findings) == 1
-    assert linter.findings[0].line_number == 6
+    assert linter.findings[0].line_number == 0
 
     # Preamble missing Purpose.
     linter = Linter("helloWorld.s")
@@ -116,7 +116,7 @@ def test_check_preamble():
     ]
     linter._check_preamble()
     assert len(linter.findings) == 1
-    assert linter.findings[0].line_number == 5
+    assert linter.findings[0].line_number == 0
 
     # Preamble missing Functions.
     linter = Linter("helloWorld.s")
@@ -131,7 +131,7 @@ def test_check_preamble():
     ]
     linter._check_preamble()
     assert len(linter.findings) == 1
-    assert linter.findings[0].line_number == 6
+    assert linter.findings[0].line_number == 0
 
     # Preamble Functions incorrect.
     linter = Linter("helloWorld.s")
@@ -144,6 +144,20 @@ def test_check_preamble():
         '# Functions: add',
         'add:',
         'sub:',
+    ]
+    linter._check_preamble()
+    assert len(linter.findings) == 1
+    assert linter.findings[0].line_number == 6
+
+    linter = Linter("helloWorld.s")
+    linter._Linter__lines = [
+        '# Program Name: helloWorld.s',
+        '# Author: John Doe',
+        '# Date: 11/11/2020',
+        '# Purpose: To print out a hello world message using a',
+        '#          system call (svc) from ARM assembly',
+        '# Functions: add sub',
+        'add:',
     ]
     linter._check_preamble()
     assert len(linter.findings) == 1
