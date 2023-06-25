@@ -49,7 +49,7 @@ class Linter:
         program_line = line_by_key.get('program') or ()
         if not program_line:
             self._findings.append(Finding(
-                f'No "Program Name" line found.',
+                'No "Program Name" line found.',
             ))
         else:
             self._check_preamble_program_line(*program_line)
@@ -57,7 +57,7 @@ class Linter:
         author_line = line_by_key.get('author')
         if not author_line:
             self._findings.append(Finding(
-                f'No "Author" line found.',
+                'No "Author" line found.',
             ))
         else:
             self._check_preamble_author_line(*author_line)
@@ -65,7 +65,7 @@ class Linter:
         date_line = line_by_key.get('date')
         if not date_line:
             self._findings.append(Finding(
-                f'No "Date" line found.',
+                'No "Date" line found.',
             ))
         else:
             self._check_preamble_date_line(*date_line)
@@ -73,7 +73,7 @@ class Linter:
         purpose_line = line_by_key.get('purpose')
         if not purpose_line:
             self._findings.append(Finding(
-                f'No "Purpose" line found.',
+                'No "Purpose" line found.',
             ))
         else:
             self._check_preamble_purpose_line(*purpose_line)
@@ -81,7 +81,7 @@ class Linter:
         functions_line = line_by_key.get('functions')
         if not functions_line:
             self._findings.append(Finding(
-                f'No "Functions" line found.',
+                'No "Functions" line found.',
             ))
         else:
             self._check_preamble_functions_line(*functions_line)
@@ -100,7 +100,7 @@ class Linter:
 
         if name[0] not in string.ascii_lowercase:
             self._findings.append(Finding(
-                f'File starts with non-lowercase letter.',
+                'File starts with non-lowercase letter.',
             ))
 
     def _check_file_name_main(self):
@@ -249,14 +249,14 @@ class Linter:
         parts = list(map(str.strip, line.split(':')))
         if len(parts) != 2:
             self._findings.append(Finding(
-                f'Invalid "Program Name" line found.',
+                'Invalid "Program Name" line found.',
                 line_number=line_number,
                 source=line,
             ))
 
         if parts[0] != 'Program Name':
             self._findings.append(Finding(
-                f'Invalid "Program Name" line found.',
+                'Invalid "Program Name" line found.',
                 line_number=line_number,
                 source=line,
                 columns=(0, len(parts[0])),
@@ -264,7 +264,7 @@ class Linter:
 
         if parts[1] != self.file:
             self._findings.append(Finding(
-                f'File in "Program Name" is not equivalent to file name.',
+                'File in "Program Name" is not equivalent to file name.',
                 line_number=line_number,
                 source=line,
                 columns=(line.index(':') + 1, len(line)),
@@ -298,7 +298,8 @@ class Linter:
             for missing_function in missing_functions:
                 i = line.index(missing_function)
                 self._findings.append(Finding(
-                    f'Function {missing_function} listed in Functions line but not in file.',
+                    f'Function {missing_function} listed in '
+                    'Functions line but not in file.',
                     line_number=line_number,
                     source=line,
                     columns=(i, i + len(missing_function)),
@@ -309,7 +310,8 @@ class Linter:
         if missing_functions:
             for missing_function in missing_functions:
                 self._findings.append(Finding(
-                    f'Function {missing_function} in file but not listed in Functions line.',
+                    f'Function {missing_function} in file '
+                    'but not listed in Functions line.',
                     line_number=line_number,
                     source=line,
                 ))

@@ -14,9 +14,9 @@ class Finding:
 
         if not self.source:
             if self.line_number > 0:
-                raise ValueError(f'Line number set but no source given.')
+                raise ValueError('Line number set but no source given.')
             elif len(self.columns) > 0:
-                raise ValueError(f'Columns set but no source given.')
+                raise ValueError('Columns set but no source given.')
 
     def __str__(self) -> str:
         lines = [self.message]

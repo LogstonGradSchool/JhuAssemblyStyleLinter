@@ -1,16 +1,51 @@
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[project]
+[tool.poetry]
 name = "jhu-assembly-linter"
 version = "0.1.0"
+description = "A Linter for JHU's Assembly Classes"
+license = "MIT"
+authors = ["Paul Logston <pbulkle1@jh.edu>"]
+maintainers = ["Paul Logston <pbulkle1@jh.edu>"]
+readme = "README.md"
+homepage = "https://pypi.org/project/jhu-assembly-linter/"
+repository = "https://github.com/LogstonGradSchool/JhuAssemblyStyleLinter"
+keywords = ["jhu", "assembly", "linter"]
+classifiers = [
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+]
+packages = [
+    { include = "jhu_assembly_linter", from = "src" },
+]
 
-[project.scripts]
-jhu-assembly-linter = "jhu_assembly_linter.cmd:main"
+[tool.poetry.scripts]
+jhu-assembly-linter = 'jhu_assembly_linter.cmd:main'
+
+[tool.poetry.dependencies]
+python = ">=3.8"
+
+
+[tool.poetry.dev-dependencies]
+tox = ">=3.16.1"
+flake8 = ">=3.8.3"
+toml = ">=0.10.1"
+flake8-isort = ">=3.0.0"
+pytest = ">=5.4.0"
+coverage = ">=6.4.2"
+pytest-cov = ">=3.0.0"
 
 [tool.pytest.ini_options]
 addopts = [
     "--import-mode=importlib",
 ]
+
 pythonpath = "src"
+
+[tool.black]
+line-length = 100
+skip-string-normalization = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

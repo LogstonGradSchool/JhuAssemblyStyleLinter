@@ -12,8 +12,8 @@ def main():
 
     args = parser.parse_args()
 
-    l = Linter(args.file)
-    l.lint()
+    linter = Linter(args.file)
+    linter.lint()
 
-    for f in l.findings():
+    for f in linter.findings:
         print(f)
