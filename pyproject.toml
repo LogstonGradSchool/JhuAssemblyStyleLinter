@@ -21,9 +21,10 @@ packages = [
 
 [tool.poetry.scripts]
 jhu-assembly-linter = 'jhu_assembly_linter.cmd:main'
+jhu-assembly-linter-multi = 'jhu_assembly_linter.cmd:multi'
 
 [tool.poetry.dependencies]
-python = ">=3.8"
+python = ">=3.9"
 
 
 [tool.poetry.dev-dependencies]
