@@ -228,7 +228,7 @@ class Linter:
         return bool(re.match(r'^\s*#', line))
 
     def _check_is_function_line(self, line: str):
-        return bool(re.match(r'^[a-zA-Z0-9]+:\s*$', line))
+        return bool(re.match(r'^[_a-zA-Z0-9]+:\s*$', line))
 
     def _check_is_instruction_line(self, line: str) -> bool:
         """

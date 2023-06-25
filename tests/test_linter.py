@@ -396,4 +396,5 @@ def test_check_is_function_line():
     assert not linter._check_is_function_line('MOV r0, r0')
     assert not linter._check_is_function_line('.global func')
     assert linter._check_is_function_line('main:')
+    assert linter._check_is_function_line('_start:')
     assert not linter._check_is_function_line(' func: ')
