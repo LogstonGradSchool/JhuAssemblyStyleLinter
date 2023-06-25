@@ -32,6 +32,7 @@ def multi(argv=None) -> int:
 
     return_code = 0
     for filename in args.files:
+        print(f'--- {filename}')
         linter = Linter(filename)
         linter.lint()
         for f in linter.findings:
