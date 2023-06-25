@@ -19,7 +19,7 @@ def main():
         print(f)
 
 
-def multi(argv) -> int:
+def multi(argv=None) -> int:
     import argparse
 
     parser = argparse.ArgumentParser('A Linter for JHU course EN.605.204')
@@ -31,7 +31,7 @@ def multi(argv) -> int:
     args = parser.parse_args(argv)
 
     return_code = 0
-    for filename in args.filenames:
+    for filename in args.files:
         linter = Linter(filename)
         linter.lint()
         for f in linter.findings:
