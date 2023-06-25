@@ -19,11 +19,11 @@ class Finding:
                 raise ValueError('Columns set but no source given.')
 
     def __str__(self) -> str:
-        lines = [self.message]
+        lines = [f'E:: {self.message}']
         if self.line_number:
             line_prefix = f'{self.line_number}: '
             line_prefix_len = len(line_prefix)
-            lines.append(line_prefix + self.source)
+            lines.append(line_prefix + self.source.rstrip())
             carrot_line = ' ' * line_prefix_len
             if len(self.columns) == 2:
                 carrot_line += ' ' * self.columns[0]

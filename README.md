@@ -19,7 +19,19 @@ page](https://github.com/LogstonGradSchool/JhuAssemblyStyleLinter/releases).
 Then ...
 
 ```
-jhu-assembly-linter ./path/to/file.s
+$ jhu-assembly-linter ./path/to/file.s
+
+E:: Tab found. Only spaces allowed.
+18:     LDR x0, =helloWorld
+    ^
+E:: Instruction is not uppercase.
+19:     mov     w8, #64     /* write is syscall #64 */
+        ^
+E:: Non-functional whitespace found.
+20: 
+    ^^^^^
+E:: File name does not end with "Main" when it should.
+21: main:
 ```
 
 For a whole directory:
@@ -27,7 +39,6 @@ For a whole directory:
 ```
 find . -name "*.s" | xargs -I{} jhu-assembly-linter  {}
 ```
-
 
 ### Tests
 

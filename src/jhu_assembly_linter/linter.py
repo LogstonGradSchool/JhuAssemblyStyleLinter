@@ -1,3 +1,4 @@
+import os
 import re
 import string
 
@@ -9,14 +10,15 @@ class Linter:
     SENTIAL_EMPTY_LINES = []
 
     def __init__(self, file: str) -> None:
-        self.file: str = file
+        self._file_path = file
+        self._file: str = os.path.basename(self._file_path)
         self._findings: list[Finding] = []
         self.__lines: list[str] = self.SENTIAL_EMPTY_LINES
 
     @property
     def _lines(self):
         if self.__lines is self.SENTIAL_EMPTY_LINES:
-            with open(self.file) as fp:
+            with open(self._file_path) as fp:
                 self.__lines = fp.readlines()
         return self.__lines
 
@@ -43,13 +45,17 @@ class Linter:
 
         line_by_key: dict[str, tuple] = {}
         for i, line in preamble:
-            key = line.split()[0].rstrip(':').strip().lower()
+            key = line.split()
+            if not key:
+                continue
+
+            key = key[0].rstrip(':').strip().lower()
             line_by_key[key] = (i, line)
 
         program_line = line_by_key.get('program') or ()
         if not program_line:
             self._findings.append(Finding(
-                'No "Program Name" line found.',
+                'Preamble error: No "Program Name" line found.',
             ))
         else:
             self._check_preamble_program_line(*program_line)
@@ -57,7 +63,7 @@ class Linter:
         author_line = line_by_key.get('author')
         if not author_line:
             self._findings.append(Finding(
-                'No "Author" line found.',
+                'Preamble error: No "Author" line found.',
             ))
         else:
             self._check_preamble_author_line(*author_line)
@@ -65,7 +71,7 @@ class Linter:
         date_line = line_by_key.get('date')
         if not date_line:
             self._findings.append(Finding(
-                'No "Date" line found.',
+                'Preamble error: No "Date" line found.',
             ))
         else:
             self._check_preamble_date_line(*date_line)
@@ -73,7 +79,7 @@ class Linter:
         purpose_line = line_by_key.get('purpose')
         if not purpose_line:
             self._findings.append(Finding(
-                'No "Purpose" line found.',
+                'Preamble error: No "Purpose" line found.',
             ))
         else:
             self._check_preamble_purpose_line(*purpose_line)
@@ -81,7 +87,7 @@ class Linter:
         functions_line = line_by_key.get('functions')
         if not functions_line:
             self._findings.append(Finding(
-                'No "Functions" line found.',
+                'Preamble error: No "Functions" line found.',
             ))
         else:
             self._check_preamble_functions_line(*functions_line)
@@ -90,7 +96,7 @@ class Linter:
         """
         Check the file name follows the correct conventions.
         """
-        name = self.file[:-2]
+        name = self._file[:-2]
 
         invalidChars = set(name) - set(string.ascii_letters)
         if invalidChars:
@@ -115,17 +121,17 @@ class Linter:
                 continue
 
             if line.strip().startswith('main:'):
-                if not self.file.endswith('Main.s'):
+                if not self._file.endswith('Main.s'):
                     self._findings.append(Finding(
-                        'File name does not contain "Main" when it should.',
+                        'File name does not end with "Main" when it should.',
                         line_number=i,
                         source=line,
                     ))
                 break
         else:
-            if self.file.endswith('Main.s'):
+            if self._file.endswith('Main.s'):
                 self._findings.append(Finding(
-                    'File name contains "Main" but no main function found.',
+                    'File name ends with "Main" but no main function found.',
                 ))
 
     def _check_data_section_follows_text_section(self):
@@ -262,12 +268,12 @@ class Linter:
                 columns=(0, len(parts[0])),
             ))
 
-        if parts[1] != self.file:
+        if parts[1] != self._file:
             self._findings.append(Finding(
                 'File in "Program Name" is not equivalent to file name.',
                 line_number=line_number,
                 source=line,
-                columns=(line.index(':') + 1, len(line)),
+                columns=(line.index(':') + 2, len(line)),
             ))
 
     def _check_preamble_author_line(self, line_number, line):
