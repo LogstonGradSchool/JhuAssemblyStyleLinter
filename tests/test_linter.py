@@ -346,6 +346,9 @@ def test_check_line_empty_with_nonzero_space():
     linter._Linter__lines = [
         '    ',
         '\t',
+        '\n',
+        '\r',
+        '\r\n',
         '    MOV r0, r0',
     ]
     linter._check_line_empty_with_nonzero_space()

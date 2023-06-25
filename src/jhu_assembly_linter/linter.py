@@ -200,7 +200,8 @@ class Linter:
         Check check that empty lines have no trailing whitespace.
         """
         for i, line in enumerate(self._lines, start=1):
-            if len(line) > 0 and len(line.strip()) == 0:
+            tmp_line = line.replace('\r', '').replace('\n', '')
+            if len(tmp_line) > 0 and len(line.strip()) == 0:
                 self._findings.append(Finding(
                     'Non-functional whitespace found.',
                     line_number=i,
