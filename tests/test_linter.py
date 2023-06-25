@@ -182,6 +182,10 @@ def test_check_file_name():
     linter._check_file_name()
     assert len(linter.findings) == 0
 
+    linter = Linter("libHW9.s")
+    linter._check_file_name()
+    assert len(linter.findings) == 0
+
     # Bad names.
     linter = Linter("HelloWorld.s")
     linter._check_file_name()
@@ -189,7 +193,7 @@ def test_check_file_name():
 
     linter = Linter("2beOrNot2Be.s")
     linter._check_file_name()
-    assert len(linter.findings) == 2
+    assert len(linter.findings) == 1
 
     linter = Linter("MULTIPLY_NUMBERS.s")
     linter._check_file_name()

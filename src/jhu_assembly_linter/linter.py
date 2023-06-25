@@ -98,7 +98,7 @@ class Linter:
         """
         name = self._file[:-2]
 
-        invalidChars = set(name) - set(string.ascii_letters)
+        invalidChars = set(name) - set(string.ascii_letters + string.digits)
         if invalidChars:
             self._findings.append(Finding(
                 f'File name contains invalid characters: {invalidChars}',
