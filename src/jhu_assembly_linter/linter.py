@@ -6,6 +6,8 @@ from .finding import Finding
 
 
 class Linter:
+    FUNCTION_LINE_PATTERN = re.compile(r'^([_a-zA-Z0-9]+):\s*$')
+
     # Oh, type checking...
     SENTIAL_EMPTY_LINES = []
 
@@ -27,6 +29,7 @@ class Linter:
         self._check_file_name()
         self._check_file_name_main()
         self._check_data_section_follows_text_section()
+        self._check_end_follows_text_section()
         self._check_instructions_uppercase()
         self._check_registers_lowercase()
         self._check_line_empty_with_nonzero_space()
@@ -156,6 +159,53 @@ class Linter:
                         source=line,
                     ))
 
+    def _check_end_follows_text_section(self):
+        """
+        Check that each function has an END comment.
+        """
+        function_names_found = set()
+        function_ends_found = set()
+
+        in_text = False
+        for i, line in enumerate(self._lines, start=1):
+            if line.strip().startswith('.text'):
+                in_text = True
+                continue
+
+            if in_text:
+                in_text = False
+
+                function_name = self._get_fucntion_name(line)
+                if not function_name:
+                    self._findings.append(Finding(
+                        'Expected function name after .text block start.',
+                        line_number=i,
+                        source=line,
+                    ))
+                    continue
+
+                # Main function is ignored.
+                if function_name == 'main':
+                    continue
+
+                function_names_found.add(function_name)
+
+            end = self._get_function_end_name(line)
+            if end:
+                function_ends_found.add(end)
+
+        s = function_names_found - function_ends_found - set(['main'])
+        if s:
+            self._findings.append(Finding(
+                f'Functions missing END comment: {s}',
+            ))
+
+        s = function_ends_found - function_names_found
+        if s:
+            self._findings.append(Finding(
+                f'END comments without associated function: {s}',
+            ))
+
     def _check_instructions_uppercase(self):
         """
         Check that instructions are uppercase.
@@ -227,8 +277,22 @@ class Linter:
     def _check_is_comment_line(self, line: str):
         return bool(re.match(r'^\s*#', line))
 
+    def _get_fucntion_name(self, line: str):
+        m = self.FUNCTION_LINE_PATTERN.match(line)
+        if not m:
+            return None
+
+        return m.group(1)
+
     def _check_is_function_line(self, line: str):
-        return bool(re.match(r'^[_a-zA-Z0-9]+:\s*$', line))
+        return bool(self.FUNCTION_LINE_PATTERN.match(line))
+
+    def _get_function_end_name(self, line: str):
+        m = re.match(r'^#\s+END\s+([_a-zA-Z0-9]+)\s*$', line)
+        if not m:
+            return None
+
+        return m.group(1)
 
     def _check_is_instruction_line(self, line: str) -> bool:
         """

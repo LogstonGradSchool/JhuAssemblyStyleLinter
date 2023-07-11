@@ -318,6 +318,45 @@ def test_check_data_section_follows_text_section():
     assert linter.findings[0].line_number == 1
 
 
+def test_check_end_follows_text_section():
+    linter = Linter("")
+    linter._Linter__lines = [
+        '.text',
+        'functionName:',
+        '.data',
+    ]
+    linter._check_end_follows_text_section()
+    assert len(linter.findings) == 1
+
+    linter = Linter("")
+    linter._Linter__lines = [
+        '.text',
+        '.data',
+        '# END functionName',
+    ]
+    linter._check_end_follows_text_section()
+    assert len(linter.findings) == 2
+
+    linter = Linter("")
+    linter._Linter__lines = [
+        '.text',
+        'main:',
+        '.data',
+    ]
+    linter._check_end_follows_text_section()
+    assert len(linter.findings) == 0
+
+    linter = Linter("")
+    linter._Linter__lines = [
+        '.text',
+        'functionName:',
+        '.data',
+        '# END functionName',
+    ]
+    linter._check_end_follows_text_section()
+    assert len(linter.findings) == 0
+
+
 def test_check_instructions_uppercase():
     linter = Linter("")
     linter._Linter__lines = [
